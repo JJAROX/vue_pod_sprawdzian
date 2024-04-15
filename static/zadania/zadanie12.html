@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .child-component {
+      border: 4px dotted blue;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+    }
+
+    .child-component h3 {
+      text-decoration: underline;
+    }
+
+    .child-component p {
+      color: blue;
+    }
+
+    .components-container {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .components-container>* {
+      margin: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <p>{{title}}</p>
+    <div class="components-container">
+      <items-component :func-prop="updateValue"></items-component>
+      <change-title-component></change-title-component>
+      <add-item-component></add-item-component>
+
+    </div>
+  </div>
+  <script>
+    const appData = {
+      title: "app title",
+      items: [
+        { text: "element 1" },
+        { text: "element 2" },
+
+      ],
+      inputVal: ''
+    }
+    const itemsComponent = {
+      template: `
+      <div class="child-component">
+        <h3>itemsComponent</h3>
+        <ul>
+          <li v-for="item in items">
+            <label for="checkbox">{{item.text}}</label>
+            <input type="checkbox" id="checkbox" :value="item.text">
+      
+            </li>
+          </ul>
+        
+        </div>
+      `,
+      props: ['funcProp'],
+      data() {
+        return appData
+
+      },
+      methods: {
+
+      }
+
+    }
+    const changeTitleComponent = {
+      template: `
+      <div class="child-component">
+        <h3>changeTitleComponent</h3>
+        <input type="text" v-model="title">
+        </div>
+      `,
+      props: ['funcProp'],
+      data() {
+        return appData
+
+      },
+      methods: {
+
+      }
+
+    }
+    const addItemComponent = {
+      template: `
+      <div class="child-component">
+        <h3>addItemComponent</h3>
+        <input @change="updateInputVal" type="text" placeholder="dodaj element">
+          <button @click="addItem">add item</button>
+        </div>
+      `,
+      props: ['funcProp'],
+      data() {
+        return appData
+
+      },
+      methods: {
+        updateInputVal(e) {
+          this.inputVal = e.target.value
+        },
+        addItem() {
+          this.items.push({ text: this.inputVal })
+        }
+      }
+
+    }
+    const app = Vue.createApp({
+
+      data() {
+        return appData
+
+      },
+      methods: {
+
+      },
+      computed: {
+
+      },
+      components: {
+        "items-component": itemsComponent,
+        "change-title-component": changeTitleComponent,
+        "add-item-component": addItemComponent
+      }
+    }).mount("#app")
+
+  </script>
+</body>
+
+</html>

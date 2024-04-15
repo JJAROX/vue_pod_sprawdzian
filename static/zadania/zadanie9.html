@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .components-container {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .components-container>* {
+      margin-left: 15px;
+    }
+
+    .child-component {
+      border: 4px dotted gray;
+      background-color: lightgray;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .child-component h3 {
+      color: blue;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <button @click="addNewItems">dodaj</button>
+    <div class="components-container">
+      <child-component :header="header" :full-name="fullName" :age=age></child-component>
+      <child-component :header="header" :full-name="fullName" :age=age></child-component>
+      <child-component :header="header" :full-name="fullName" :age=age></child-component>
+    </div>
+  </div>
+  <script>
+    const childComponent = {
+      template: `
+      <div class="child-component">
+        <h3>{{header}}</h3>
+        <p>Imię: {{fullName}} </p>
+        <p>Wiek: {{age}}</p>
+        </div>
+      `,
+      props: ['header', 'fullName', 'age']
+
+    }
+    const app = Vue.createApp({
+
+      data() {
+        return {
+          header: "default header",
+          fullName: "default name",
+          age: "defaut age"
+        }
+      },
+      methods: {
+        addNewItems() {
+          this.header = "Wizytówka"
+          this.fullName = "Jan Nowak"
+          this.age = 23
+        }
+      },
+      computed: {
+
+      },
+      components: {
+        "child-component": childComponent
+      }
+    }).mount("#app")
+
+  </script>
+</body>
+
+</html>

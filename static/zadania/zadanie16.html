@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    table,
+    th,
+    td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <table>
+      <tr>
+        <th>lp</th>
+        <th>produkt</th>
+        <th>cena</th>
+        <th>koszyk</th>
+      </tr>
+      <tr v-for="(item,id) in products">
+        <td v-text="id+1"></td>
+        <td v-text="item.product"></td>
+        <td v-text="item.price"></td>
+        <td> <button @click="changeSel(id)">{{item.selected}}</button> </td>
+      </tr>
+    </table>
+  </div>
+  <script>
+    const app = Vue.createApp({
+
+      data() {
+        return {
+          products: [
+            { product: "książka", price: 100, selected: "dodaj do koszyka" },
+            { product: "płyta CD", price: 200, selected: "dodaj do koszyka" },
+            { product: "mleko", price: 300, selected: "dodaj do koszyka" },
+            { product: "buty", price: 400, selected: "dodaj do koszyka" },
+          ]
+        }
+
+      },
+      methods: {
+        changeSel(id) {
+          if (this.products[id].selected === 'dodaj do koszyka') {
+            this.products[id].selected = 'w koszyku'
+          } else if (this.products[id].selected === 'w koszyku') {
+            this.products[id].selected = 'dodaj do koszyka'
+          }
+        }
+
+      },
+      computed: {
+
+      },
+    }).mount("#app")
+
+  </script>
+</body>
+
+</html>

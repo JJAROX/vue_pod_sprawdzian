@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .child-component {
+      border: 4px dotted blue;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+    }
+
+    .child-component h3 {
+      text-decoration: underline;
+    }
+
+    .child-component p {
+      color: blue;
+    }
+
+    .components-container {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .components-container>* {
+      margin: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <h1>value: {{value}}</h1>
+    <div class="components-container">
+      <child-component v-for="item in items" :number="item" :func-prop="updateVal"></child-component>
+
+    </div>
+  </div>
+  <script>
+
+    const childComponent = {
+      template: `
+      <div class="child-component">
+        <h3>child-component</h3>
+          <p>{{number}}</p>
+          <button @click="sendToParent">send data to parent</button>
+        </div>
+      `,
+      props: ['number', 'funcProp'],
+      data() {
+        return {
+          x: this.number
+        }
+
+      },
+      methods: {
+        sendToParent() {
+          this.funcProp(this.x)
+        }
+      }
+
+    }
+    const app = Vue.createApp({
+
+      data() {
+        return {
+          items: [100, 200, 300],
+          value: 0
+        }
+
+      },
+      methods: {
+        updateVal(number) {
+          this.value += number ** 2
+        }
+      },
+      computed: {
+
+      },
+      components: {
+        "child-component": childComponent,
+      }
+    }).mount("#app")
+
+  </script>
+</body>
+
+</html>

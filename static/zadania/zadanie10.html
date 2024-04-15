@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .child-component {
+      border: 4px dotted blue;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+    }
+
+    .child-component h3 {
+      text-decoration: underline;
+    }
+
+    .child-component p {
+      color: blue;
+    }
+
+    .components-container {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .components-container>* {
+      margin: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="components-container">
+      <child-component v-for="digit in digitsArray" :number="digit"></child-component>
+    </div>
+  </div>
+  <script>
+    const childComponent = {
+      template: `
+      <div class="child-component">
+        <h3>child-component</h3>
+        <p>data from parent: {{number}} </p>
+        <p>data in component: {{x}} </p>
+        <button @click="increaseX">dodaj 1 do wartości w komponencie</button>
+        </div>
+      `,
+      props: ['number'],
+      data() {
+        return {
+          x: this.number
+        }
+      },
+      methods: {
+        increaseX() {
+          this.x++
+        }
+      }
+
+    }
+    const app = Vue.createApp({
+
+      data() {
+        return {
+          digitsArray: [1, 4, 16]
+        }
+      },
+      methods: {
+
+      },
+      computed: {
+
+      },
+      components: {
+        "child-component": childComponent
+      }
+    }).mount("#app")
+
+  </script>
+</body>
+
+</html>

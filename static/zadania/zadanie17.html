@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    table,
+    th,
+    td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <p>Produkty:</p>
+    <div v-for="product in products">
+      <input @change="addItem" type="checkbox" :value="product" :id="product">
+      <label :for="product">{{product}}</label>
+    </div>
+    <p>Sposób dostawy: {{deliveryOption}}</p>
+    <div v-for="item in delivery">
+      <input @click="radioDelivery" type="radio" name="delivery" v-model="deliveryOption" :value="item" :id="item">
+      <label :for="item">{{item}}</label>
+    </div>
+    <p>Metoda płatności: {{paymentOption}}</p>
+    <div v-for="item in payment">
+      <input @click="radioPayment" type="radio" name="payment" v-model="paymentOption" :value="item" :id="item">
+      <label :for="item">{{item}}</label>
+    </div>
+    <p>Potwierdzenie:</p>
+    <input @change="potw" type="checkbox" id="confirm">
+    <label for="confirm">Potwierdzam jestem konfidentem</label>
+    <div v-show="isConfirmedAll">
+      <h2>Podsumowanie</h2>
+      <p>Zakupy:</p>
+      <div v-for="item in addedProducts">
+        <p>{{item}}</p>
+
+      </div>
+      <hr>
+      <p>Sposób dostawy: {{deliveryOption}}</p>
+      <hr>
+      <p>Metoda płatności: {{paymentOption}}</p>
+      <button :disabled="isDisabled">Wyślij</button>
+    </div>
+  </div>
+  <script>
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": 'application/json'
+      }
+    }
+    fetch('/shop', options)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        const app = Vue.createApp({
+
+          data() {
+            return {
+              products: data.products,
+              delivery: data.delivery,
+              payment: data.payment,
+              deliveryOption: '',
+              paymentOption: '',
+              show: false,
+              addedProducts: [],
+              checkDelivery: false,
+              checkPayment: false,
+              potwierdzenie: false
+            }
+
+          },
+          methods: {
+            addItem(e) {
+              if (e.target.checked === true) {
+                this.addedProducts.push(e.target.value)
+              } else if (e.target.checked === false) {
+                this.addedProducts = this.addedProducts.filter(element => element !== e.target.value)
+              }
+            },
+            radioDelivery(e) {
+              if (e.target.checked === true) {
+                this.checkDelivery = true
+              } else if (e.target.checked === false) {
+                this.checkDelivery = false
+              }
+            },
+            radioPayment(e) {
+              if (e.target.checked === true) {
+                this.checkPayment = true
+              } else if (e.target.checked === false) {
+                this.checkPayment = false
+              }
+            },
+            potw(e) {
+              if (e.target.checked === true) {
+                this.potwierdzenie = true
+                console.log(this.addedProducts.length, this.checkDelivery, this.checkPayment, this.potwierdzenie);
+              } else if (e.target.checked === false) {
+                this.potwierdzenie = false
+              }
+            },
+
+
+
+          },
+          computed: {
+            isConfirmedAll() {
+              if (this.addedProducts.length > 0 && this.checkDelivery === true && this.checkPayment === true) {
+                return true
+              } else if (this.addedProducts.length == 0 || this.checkDelivery === false || this.checkPayment === false) {
+                return false
+              }
+            },
+            isDisabled() {
+              if (this.addedProducts.length > 0 && this.checkDelivery === true && this.checkPayment === true && this.potwierdzenie === true) {
+                return false
+              } else if (this.addedProducts.length == 0 || this.checkDelivery === false || this.checkPayment === false || this.potwierdzenie === false) {
+                return true
+              }
+            }
+          },
+        }).mount("#app")
+      }
+      )
+      .catch(error => console.log(error))
+
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .main-container {
+      background-color: lightgray;
+      width: fit-content;
+      height: fit-content;
+      padding: 10px;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .main-container>* {
+      margin-left: 15px;
+    }
+
+    .confirm-div {
+      display: flex;
+      flex-direction: row;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="main-container">
+      <div class="container">
+        <p>Akcesoria</p>
+        <div v-for="item in accessories">
+          <input @change="addItem" type="checkbox" :value="item" :id="item">
+          <label :for="item">{{item}}</label>
+        </div>
+
+      </div>
+      <div class="container">
+        <p>Forma odbioru</p>
+        <div v-for="item in order">
+          <input @change="radioBtn" type="radio" name="order" :id="item">
+          <label :for="item">{{item}}</label>
+        </div>
+      </div>
+      <div class="container">
+        <p>Potwierdzenie</p>
+        <div class="confirm-div">
+          <input @change="confirmUpdate" type="checkbox" id="confirm">
+          <label for="confirm">Potwierdzam zgodność danych podanych w formularzu kontaktowym</label>
+        </div>
+        <button :disabled="isConfirmedAll">Wyślij</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    const app = Vue.createApp({
+
+      data() {
+        return {
+          accessories: [
+            'Myszka', 'Laptop', 'Komputer'
+          ],
+          order: ['Kurier', 'Poczta', 'Osobiście'],
+          addedAccessories: [],
+          radioConfirma: false,
+          confirm: false
+        }
+      },
+      methods: {
+        addItem(e) {
+          if (e.target.checked === true) {
+            this.addedAccessories.push(e.target.value)
+          } else if (e.target.checked === false) {
+            this.addedAccessories = this.addedAccessories.filter(element => element !== e.target.value)
+          }
+        },
+        radioBtn(e) {
+          if (e.target.checked === true) {
+            this.radioConfirma = true
+          } else if (e.target.checked === false) {
+            this.radioConfirma = false
+          }
+        },
+        confirmUpdate(e) {
+          if (e.target.checked === true) {
+            this.confirm = true
+            console.log(this.addedAccessories.length, this.radioConfirma, this.confirm);
+          } else if (e.target.checked === false) {
+            this.confirm = false
+          }
+        }
+
+
+      },
+      computed: {
+        isConfirmedAll() {
+          if (this.addedAccessories.length > 0 && this.radioConfirma === true && this.confirm === true) {
+            return false
+          } else if (this.addedAccessories.length == 0 || this.radioConfirma === false || this.confirm === false) {
+            return true
+          }
+        }
+      }
+    }).mount("#app")
+
+  </script>
+</body>
+
+</html>

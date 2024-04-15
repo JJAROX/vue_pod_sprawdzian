@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .showHIdeDiv {
+      width: 800px;
+      border: 1px solid black;
+    }
+
+    .showHIdeDiv p {
+      text-decoration: underline;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <button @click="showHide">{{btnVal}}</button>
+    <div class="showHIdeDiv">
+      <p v-show="show">element</p>
+    </div>
+  </div>
+  <script>
+    const app = Vue.createApp({
+
+      data() {
+        return {
+          btnVal: 'ukryj',
+          show: true
+        }
+      },
+      methods: {
+        showHide() {
+          if (this.show == true) {
+            this.btnVal = 'pokaż'
+            this.show = false
+          } else if (this.show == false) {
+            this.btnVal = 'ukryj'
+            this.show = true
+          }
+        }
+
+      },
+      computed: {
+
+
+      }
+    }).mount("#app")
+
+  </script>
+</body>
+
+</html>

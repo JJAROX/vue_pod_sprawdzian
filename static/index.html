@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strona Główna</title>
+  <style>
+    .links-container {
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Zadania</h1>
+  <div class="links-container"></div>
+  <script>
+    const linksContainer = document.querySelector('.links-container')
+
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
+    fetch("/zadania", options)
+      .then(response => response.json())
+      .then(data =>
+        data.filenames.forEach(element => {
+          const linkEl = document.createElement('a')
+          linkEl.append(element)
+          linkEl.href = element
+          linksContainer.append(linkEl)
+        })
+      )
+      .catch(error => console.log(error))
+  </script>
+</body>
+
+</html>

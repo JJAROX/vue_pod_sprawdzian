@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .child-component {
+      border: 4px dotted blue;
+      width: fit-content;
+      padding: 10px;
+    }
+
+    .child-component p {
+      text-decoration: underline;
+    }
+
+    .child-component h3 {
+      color: blue;
+    }
+
+    .components-container {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .components-container>* {
+      margin-left: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="components-container">
+      <button @click="increaseX">dodaj 1 do każdego componentu</button>
+      <child-component :number="x"></child-component>
+      <child-component :number="x"></child-component>
+      <child-component :number="x"></child-component>
+    </div>
+  </div>
+  <script>
+    const childComponent = {
+      template: `
+      <div class="child-component">
+        <p>child component</p>
+        <h3 v-text="number"></h3>
+        </div>
+      `,
+      props: ['number']
+
+    }
+    const app = Vue.createApp({
+
+      data() {
+        return {
+          x: 100
+        }
+      },
+      methods: {
+        increaseX() {
+          this.x++
+        }
+
+
+      },
+      computed: {
+
+      },
+      components: {
+        "child-component": childComponent
+      }
+    }).mount("#app")
+
+  </script>
+</body>
+
+</html>
