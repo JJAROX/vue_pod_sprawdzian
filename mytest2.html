@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./libs/jq.js"></script>
+  <style>
+    body {
+      background-color: rgb(64, 111, 64);
+    }
+  </style>
+  <script>
+    $(document).ready(() => {
+
+
+
+      const columns = ["produkt", "cena / szt", "ile", "wartość"]
+
+      const products = [
+        { price: "2.22", product: "kurtka" },
+        { price: "3.34", product: "szalik" },
+        { price: "4.44", product: "rękawiczki" },
+        { price: "5.55", product: "buty" },
+        { price: "6.66", product: "bluza" },
+        { price: "7.77", product: "coś na wieczór" }
+      ]
+
+      let total = 0
+      products.forEach(element => {
+        console.log(parseFloat(element.price));
+        total += parseFloat(element.price)
+      });
+      console.log(total);
+      for (let i = -1; i < products.length + 1; i++) {
+        if (i == -1) {
+          let tr = $("<tr>")
+          for (let k = 0; k < columns.length; k++) {
+            let th = $("<th>")
+            th.append(columns[k])
+            tr.append(th)
+          }
+          $("#jqTable").append(tr)
+        } else if (i == 6) {
+          let tr = $("<tr>")
+          let td = $(`<td class="total" >`)
+          td.append(total)
+          td.attr("colspan", 4)
+          td.css("text-align", 'center')
+          tr.append(td)
+          $("#jqTable").append(tr)
+        }
+        else {
+          let tr = $("<tr>")
+          let td = $("<td>")
+          let tdCena = $("<td>")
+          let tdInput = $("<td>")
+          let tdResult = $(`<td class="result" data-id=${i}>`)
+          tdCena.append(products[i].price)
+          td.append(products[i].product)
+          tdInput.append($(`<input class="rangeinput" type="range" min="1" max="5" data-id="${i}">`))
+          tdInput.append($(`<p class="p-val" >3</p>`).css("text-align", "center"))
+          let inputValue = $(".rangeinput").val()
+          tdResult.append(products[i].price * 3)
+          tr.append(td)
+          tr.append(tdCena)
+          tr.append(tdInput)
+          tr.append(tdResult)
+          $("#jqTable").append(tr)
+        }
+      }
+
+      $(".rangeinput").each(function (index) {
+        $(this).on("change", () => {
+          let total2 = 0
+          let p = $(this).next()
+          let inputTd = $(this).parent()
+          let nextSibling = inputTd.next()
+          let beforeSibling = inputTd.prev()
+          nextSibling.text((parseFloat(beforeSibling.text()) * $(this).val()).toFixed(2).toString())
+          console.log((parseFloat(beforeSibling.text()) * $(this).val()).toFixed(2).toString());
+          console.log('works');
+          p.text($(this).val())
+          console.log(beforeSibling.text(), $('.rangeinput').val());
+          console.log(parseFloat(beforeSibling.text()) * $(this).val());
+          $(".result").each(function (index, element) {
+            console.log($(element).text());
+            total2 += parseFloat($(element).text())
+          });
+          console.log(total2);
+          $('.total').text(total2.toFixed(2).toString())
+        })
+
+      });
+    })
+  </script>
+</head>
+
+<body>
+  <table id="jqTable">
+
+  </table>
+</body>
+
+</html>
